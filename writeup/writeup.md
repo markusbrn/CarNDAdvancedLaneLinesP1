@@ -86,7 +86,7 @@ Now the complete lane detection process can be tested with test images first. Fo
     * the starting points for the lane lines at image bottom shall be between 150 and 400 pixels for the left lane and between 1000 and 1200 pixels for the right lane line.
     * the curvature radius shall be greater than 300m for both lane lines
     * if this is the case the lane detection result is used for the drawing of the lane lines (self.detected=True) and an error counter self.ecnt is reduced by 1.
-    * if not the result is not used and the error counter is increased
+    * if not, the result is not used and the error counter is increased
     * if the result is admitted, it is stored in a buffer list "self.fit_list_l,r" which is used to compute the mean of the last five admissible lane detection results: self.best_fit=np.concatenate((self.fit_list_l.sum(axis=0)/5,self.fit_list_r.sum(axis=0)/5),axis=0)
     * if the error counter reaches 5 the lane identification with the window search is triggered again (self.reaquire=True); if this is not the case - and after the initial lane detection has been performed once - it is sufficient for the analysis of the next image in the pipeline to use the previously computed polynomial function and to search in an evironment of +/-100pixels around this polynomial function
 
@@ -99,3 +99,8 @@ The result from the process is shown in the following image:
 ![](image7.png)
 
 The process with videos is then the same as described above for test images.
+
+## Discussion
+The pipeline is working OK on the project video. When testing it with the challenge video, I encountered problems especially with the left lane where there are other road sections (e.g. the crash barrier) that also show strong gradients and are therefore easily detected as lane line candidate. For a better analysis of this I integrated the col_test function in the imgproc class. From first tests I think that perhaps leaving the gradient out completely and instead combining the s-component from the hls image with the v-component from a hsv version of the original image might be promising.
+
+The pipeline will also have most certainly problems when the lane lines do not go from top to bottom but curve so strongly that they go out of the image somewhere between top and bottom of the tranformed image.
